@@ -13,9 +13,8 @@ namespace Gladiators.Common.Skills.Warrior
 
         public override void Use(Character attacker)
         {
-            IsActive = false;
-            attacker.Mana -= ManaCost;
-            Console.WriteLine($"Attacker {attacker.Name} used {Name} old armor is {attacker.Armor} new armor is {attacker.Armor *= Value}");
+            base.UpdateCharacterStats(attacker);
+            Console.WriteLine($"Attacker {attacker.Name} used {Name} old armor is {attacker.Armor} new armor is {(attacker.Armor != 0 ? attacker.Armor *= Value : attacker.Armor += value)}");
         }
     }
 }

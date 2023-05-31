@@ -9,14 +9,12 @@ namespace Gladiators.Common.Skills.Mage
         const string name = "Earthshock";
         const int manaCost = 30;
         const int value = 20;
-        public Earthshock()
-            :base(name,manaCost, value) { }
+        public Earthshock() : base(name, manaCost, value) { }
 
         public override void Use(Character attacker, Character target)
         {
-            IsActive = false;
+            base.UpdateCharacterStats(attacker);
             Console.WriteLine($"Attacker {attacker.Name} used {Name} old defender health {target.Health} new defender health is {target.Health - Value}");
-            throw new NotImplementedException();
         }
     }
 }

@@ -96,7 +96,12 @@ namespace Gladiators.Common.Characters
                     Mana += ManaRegen;
                 timeToRegen = false;
             }
+            else
+            {
+                timeToRegen = true;
+            }
         }
+
         #endregion
     }
 }

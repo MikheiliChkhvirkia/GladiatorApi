@@ -4,7 +4,7 @@ using Gladiators.Common.Skills.Mage;
 
 namespace Gladiators.Common.Classes
 {
-    internal class Mage : Character
+    public class Mage : Character
     {
         public Mage(string name, int armor, int crit, int dexterity, int intelligence, int strength, int vigor) : base()
         {

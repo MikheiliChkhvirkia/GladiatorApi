@@ -14,11 +14,17 @@ namespace Gladiators.Common.SkillContracts
         public bool IsActive { get; protected set; } = true;
         public int ManaCost { get; }
         public int Value { get; protected set; }
+        public int LastActivated { get; set; }
 
         public virtual void Use(Character attacker) 
             => throw new NotImplementedException();
         public virtual void Use(Character attacker, Character target) 
             => throw new NotImplementedException();
+
+        public virtual void ActivateSkill()
+        {
+            IsActive = true;
+        }
 
         public virtual void UpdateCharacterStats(Character character)
         {
