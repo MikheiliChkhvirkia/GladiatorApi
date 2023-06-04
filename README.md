@@ -50,8 +50,6 @@ The name field represents the character's name, while class determines the chara
 Once you have created gladiator characters, battle will start in console app and follow the instructions.
 
 # Characters
-Currently, there is only one working character class available: Warrior (ID: 1). The Warrior class comes with three unique skills, which are randomly selected for each match using a Pseudo-Random algorithm. Please note that each skill can only be used once per match.
-
-We are continuously working on expanding the character roster and adding new classes with their own distinct abilities. Stay tuned for future updates!
+Every class has their own unique skills, which are randomly selected for each match using a Pseudo-Random algorithm.
 
 If you have any questions or need further assistance, please don't hesitate to reach out to us. Enjoy the battles!
