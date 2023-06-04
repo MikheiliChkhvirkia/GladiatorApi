@@ -3,14 +3,15 @@ using Gladiators.Common.Characters.Enum;
 using Gladiators.Common.SkillContracts;
 using Gladiators.Common.SkillContracts.BasedOnClass;
 
-namespace Gladiators.Common.Skills.Mage
+namespace Gladiators.Common.Skills.Archer
 {
-    public class Earthshock : BaseSkill, IMageSkill
+    public class HeadShot : BaseSkill, IArcherSkill
     {
-        const string name = "Earthshock";
-        const int manaCost = 30;
-        const int value = 45;
-        public Earthshock() : base(name, manaCost, value) { }
+        const string name = "HeadShot";
+        const int manaCost = 3;
+        const int value = 0;
+        const int stunDuration = 2;
+        public HeadShot() : base(name, manaCost, value) { }
 
         public override void Use(Character attacker, Character target)
         {
@@ -20,15 +21,18 @@ namespace Gladiators.Common.Skills.Mage
 
             int totalDamage = GetTotalDamage(attacker, target);
 
-            Console.WriteLine($"Defender {target.Name}. Old defender health: {target.Health}. New defender health: {target.Health -= totalDamage} \n");
+            target.StunDuration = stunDuration;
+
+            Console.WriteLine($"Defender {target.Name}. Old defender health: {target.Health}. New defender health: {target.Health -= attacker.PhysicalDamage * 2 + totalDamage}\n");
+            Console.WriteLine($"Defender {target.Name}. is now stunned");
         }
 
         protected override int GetTotalDamage(Character attacker, Character target)
         {
             return target.Class switch
             {
-                CharacterClassesEnum.Warrior => Value + attacker.MagicalDamage,
-                CharacterClassesEnum.Mage => Value,
+                CharacterClassesEnum.Warrior => Value,
+                CharacterClassesEnum.Mage => Value + attacker.MagicalDamage,
                 CharacterClassesEnum.Archer => Value,
                 _ => -1,
             };

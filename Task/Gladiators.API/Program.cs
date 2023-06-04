@@ -1,7 +1,7 @@
 using Gladiators.Application.GameManager.Commands;
 using Gladiators.Application.GameManager.Contracts;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IGameManagerRepository, GameManagerRepository>();
+builder.Services.AddSignalR();
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -30,7 +31,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -6,8 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Skills\Archer\" />
-    <Folder Include="Skills\BasicSkills\" />
+    <Compile Remove="Skills\BasicSkills\**" />
+    <EmbeddedResource Remove="Skills\BasicSkills\**" />
+    <None Remove="Skills\BasicSkills\**" />
   </ItemGroup>
 
 </Project>

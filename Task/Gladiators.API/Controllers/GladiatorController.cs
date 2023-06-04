@@ -11,7 +11,7 @@ namespace Gladiators.API.Controllers
 {
     public class GladiatorController : ApiControllerBase
     {
-        public GladiatorController(IGameManagerRepository repository) 
+        public GladiatorController(IGameManagerRepository repository)
             : base(repository) { }
 
         [HttpGet("Character-Classes")]
@@ -29,7 +29,7 @@ namespace Gladiators.API.Controllers
         }
 
         [HttpPost("Fight-Characters")]
-        [SwaggerOperation("fight newly created characters to each other")]
+        [SwaggerOperation("fight newly created characters to each other (use max 25 points)")]
         public ResponseModel FightCharacters([FromBody] CharacterFightRequest fightRequest)
         {
             Character firstCharacter = CreateCharacter(fightRequest.CharacterOne);
@@ -42,30 +42,34 @@ namespace Gladiators.API.Controllers
 
         private static Character CreateCharacter(CharacterModel character)
         {
-            switch (character.Class)
+            return character.Class switch
             {
-                case CharacterClassesEnum.Warrior:
-                    return new Warrior
-                        (character.Name,
-                        character.Armor,
-                        character.Crit,
-                        character.Dexterity,
-                        character.Intelligence,
-                        character.Strength,
-                        character.Vigor);
-                case CharacterClassesEnum.Mage:
-                    return new Mage
-                        (character.Name,
-                        character.Armor,
-                        character.Crit,
-                        character.Dexterity,
-                        character.Dexterity,
-                        character.Strength,
-                        character.Vigor);
-                case CharacterClassesEnum.Archer:
-                    break;
-            }
-            return null;
+                CharacterClassesEnum.Warrior => new Warrior
+                                        (character.Name,
+                                        character.Armor,
+                                        character.Crit,
+                                        character.Dexterity,
+                                        character.Intelligence,
+                                        character.Strength,
+                                        character.Vigor),
+                CharacterClassesEnum.Mage => new Mage
+                                        (character.Name,
+                                        character.Armor,
+                                        character.Crit,
+                                        character.Dexterity,
+                                        character.Dexterity,
+                                        character.Strength,
+                                        character.Vigor),
+                CharacterClassesEnum.Archer => new Archer
+                                        (character.Name,
+                                        character.Armor,
+                                        character.Crit,
+                                        character.Dexterity,
+                                        character.Dexterity,
+                                        character.Strength,
+                                        character.Vigor),
+                _ => null,
+            };
         }
 
         #endregion

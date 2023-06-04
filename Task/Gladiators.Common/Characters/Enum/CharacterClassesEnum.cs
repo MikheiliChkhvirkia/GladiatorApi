@@ -3,7 +3,7 @@
     public enum CharacterClassesEnum
     {
         Warrior = 1,
-        Archer,
-        Mage
+        Mage,
+        Archer
     }
 }

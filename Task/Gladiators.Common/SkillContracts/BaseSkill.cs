@@ -1,10 +1,11 @@
 ﻿using Gladiators.Common.Characters;
+using Gladiators.Common.Characters.Enum;
 
 namespace Gladiators.Common.SkillContracts
 {
     public abstract class BaseSkill
     {
-        protected BaseSkill(string name, int manaCost, int value) 
+        protected BaseSkill(string name, int manaCost, int value)
         {
             Name = name;
             ManaCost = manaCost;
@@ -16,9 +17,7 @@ namespace Gladiators.Common.SkillContracts
         public int Value { get; protected set; }
         public int LastActivated { get; set; }
 
-        public virtual void Use(Character attacker) 
-            => throw new NotImplementedException();
-        public virtual void Use(Character attacker, Character target) 
+        public virtual void Use(Character attacker, Character target)
             => throw new NotImplementedException();
 
         public virtual void ActivateSkill()
@@ -26,10 +25,21 @@ namespace Gladiators.Common.SkillContracts
             IsActive = true;
         }
 
-        public virtual void UpdateCharacterStats(Character character)
+        protected virtual void UpdateCharacterManaAndSkillStat(Character character)
         {
             IsActive = false;
             character.Mana -= ManaCost;
+        }
+
+        protected virtual int GetTotalDamage(Character attacker, Character target)
+        {
+            return target.Class switch
+            {
+                CharacterClassesEnum.Warrior => Value,
+                CharacterClassesEnum.Mage => Value,
+                CharacterClassesEnum.Archer => Value,
+                _ => -1,
+            };
         }
     }
 }

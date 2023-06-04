@@ -8,20 +8,14 @@ namespace Gladiators.Application.GameManager.Commands
 {
     public class GameManagerRepository : IGameManagerRepository
     {
-        public static int Rounds { get; set; } = 1;
+        public int Rounds { get; set; } = 1;
 
         public ResponseModel Fight(Character charOne, Character charTwo)
         {
+            PrintCharacterGraph(charOne, charTwo, "Press Enter to start the fight...");
+
             while (true)
             {
-                if (Rounds == 1)
-                {
-                    Console.Clear();
-                    // Print the graph
-                    Console.WriteLine(BuildCharacterGraph(charOne, charTwo).ToString());
-                    Console.WriteLine("Press Enter to start the fight...");
-                    Console.ReadLine();
-                }
                 if (charOne.IsDraw(charTwo))
                 {
                     return GameOver(character: null, GameOverEnum.Draw);
@@ -34,20 +28,46 @@ namespace Gladiators.Application.GameManager.Commands
                 {
                     return GameOver(character: charOne, GameOverEnum.PlayerTwoWon);
                 }
-                Console.WriteLine($"Round {Rounds++}");
 
-                charOne.UseSkill(GetSkill(charOne), charTwo);
+                Console.WriteLine($"Round {Rounds++} \n");
 
-                charTwo.UseSkill(GetSkill(charTwo), charOne);
+                PerformTurn(charOne, charTwo);
+                PerformTurn(charTwo, charOne);
 
-                // Print the graph
-                Console.WriteLine(BuildCharacterGraph(charOne, charTwo).ToString());
-
-                Console.WriteLine("Press Enter to continue to the next turn...");
-                Console.ReadLine();
+                PrintCharacterGraph(charOne, charTwo, "Press Enter to continue to the next turn...");
 
                 charOne.RegenManaAndHealth();
                 charTwo.RegenManaAndHealth();
+            }
+        }
+        #region Private Methods
+        private void PrintCharacterGraph(Character charOne, Character charTwo, string text)
+        {
+            Console.WriteLine(BuildCharacterGraph(charOne, charTwo).ToString());
+            Console.WriteLine(text);
+            Console.ReadLine();
+            if (Rounds % 5 == 0)
+            {
+                Console.Clear();
+            }
+        }
+
+        private void PerformTurn(Character attacker, Character target)
+        {
+            if (!attacker.IsStunned())
+            {
+                attacker.UseSkill(GetSkill(attacker), target);
+            }
+            else
+            {
+                if (attacker.StunDuration > 0)
+                {
+                    Console.WriteLine($"{attacker.Name} is stunned! {attacker.StunDuration} Rounds are left!\n");
+                }
+                else
+                {
+                    Console.WriteLine($"{attacker.Name} will attack next round.\n");
+                }
             }
         }
 
@@ -107,10 +127,10 @@ namespace Gladiators.Application.GameManager.Commands
             return sb;
         }
 
-        private static ResponseModel GameOver(Character character, GameOverEnum gameOverEnum)
+        private ResponseModel GameOver(Character character, GameOverEnum gameOverEnum)
         {
             Rounds = 1;
-            ResponseModel result = new ();
+            ResponseModel result = new();
             switch (gameOverEnum)
             {
                 case GameOverEnum.Draw:
@@ -140,29 +160,30 @@ namespace Gladiators.Application.GameManager.Commands
             return result;
         }
 
-        private static BaseSkill GetSkill(Character character)
+        private BaseSkill GetSkill(Character character)
         {
             List<BaseSkill> activeSkills = character.Skills
                 .Where(x => x.IsActive && x.ManaCost <= character.Mana)
                 .ToList();
-            //Activate disabled skills if last round activated was 5 rounds ago
+
+            //Activate disabled skills if last round activated was 5 rounds ago warrior 2 rounds age if mage
             List<BaseSkill> disabledSkills = character.Skills
-                .Where(x => !x.IsActive && x.LastActivated + 5 <= Rounds)
+                .Where(x => !x.IsActive && x.LastActivated + character.SkillCooldown <= Rounds)
                 .ToList();
 
-            disabledSkills.ForEach(skill => skill.ActivateSkill());
+            disabledSkills?.ForEach(skill => skill.ActivateSkill());
 
             int activeSkillsCount = activeSkills.Count;
 
             if (activeSkillsCount == 0)
                 return null;
 
-            var random = new Random();
-            var nullChance = activeSkillsCount - 1;
-            var skillChance = 1;
+            Random random = new();
+            int nullChance = activeSkillsCount - 1;
+            int skillChance = 1;
 
-            var totalChances = nullChance + skillChance;
-            var randomIndex = random.Next(1, totalChances + 1);
+            int totalChances = nullChance + skillChance;
+            int randomIndex = random.Next(1, totalChances + 1);
 
             if (randomIndex <= nullChance)
                 return null;
@@ -171,5 +192,7 @@ namespace Gladiators.Application.GameManager.Commands
             activeSkills[randomIndex].LastActivated = Rounds;
             return activeSkills[randomIndex];
         }
+        #endregion
+
     }
 }

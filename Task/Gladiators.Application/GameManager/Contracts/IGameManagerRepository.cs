@@ -1,6 +1,5 @@
 ﻿using Gladiators.Application.GameManager.Commands;
 using Gladiators.Common.Characters;
-using System.Text;
 
 namespace Gladiators.Application.GameManager.Contracts
 {
